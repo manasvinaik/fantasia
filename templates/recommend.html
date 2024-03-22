@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <style>
+        body{
+            background-color: #fbc547;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+    
+        @font-face {
+            font-family: 'Shrikhand';
+            src: url('{{ url_for("static", filename="Shrikhand.ttf") }}') format('truetype');
+        }
+
+        .card {
+            border-radius: 15px;
+            background-color: black;
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 10px; /* Adjust this value to leave some space below the rating */
+        }
+
+        .card .card-img-top{
+            align-items: center;
+        }
+
+
+        .navbar {
+            background-color: black;
+            border-radius: 50px;
+            margin: 10px 10px 0 10px;
+        }
+
+        .navbar-toggler {
+            border: none;
+            font-size: 1.25rem;
+        }
+
+        .navbar-toggler:focus,
+        .btn-close:focus {
+            box-shadow: none;
+            outline: none;
+        }
+
+        .navbar-nav .nav-link {
+            color: white;
+            font-family: Georgia, serif;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link:hover {
+            opacity: 0.7;
+        }
+
+        .navbar-nav .nav-link.active {
+            color: #fbc547;
+            font-family: Georgia, serif;
+            font-weight: bold;
+        }
+
+        input[type="text"]::placeholder {
+        color: white; /* Change to the desired placeholder color */
+    }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <span class="navbar-toggler-icon" style="color: white;"></span>
+            </button>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" style="background-color: black;">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel" style="color: white; font-family: Georgia, serif;">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link" mx-lg-2 aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="/top">Top 15</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/recommend">Recommend books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="/genre">Genre Recommendation</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="display">
+        <div class="row">
+            <h1 style="color: black; font-size: 50px; font-family: Georgia, serif; font-weight: bold; margin: 130px 0 40px 50px; width: 60vw;">Recommend me a Book</h1>
+            <form action="/recommend_books" method="post" style="margin: 0 0 0 50px;">
+                <input name="user_input" type="text" class="form-control input-with-placeholder" style="width: 85vw; font-family: Georgia, serif; background-color: black; color: #fbc547; border-radius: 20px;border-color: black;" list="book_suggestions" placeholder="Enter book name"><br>
+                <datalist id="book_suggestions">
+                    <!-- Add your suggestions here -->
+                    <option value="Harry Potter and the Sorcerer's Stone (Book 1)"></option>  
+                    <option value="1984"></option>
+                    <option value="The Notebook"></option>
+                    <option value="The Da Vinci Code"></option>  
+                    <option value="The Hobbit : The Enchanting Prelude to The Lord of the Rings"></option>
+                    <option value="The Notebook"></option>  
+                    <option value="The Fellowship of the Ring (The Lord of the Rings, Part 1)"></option>  
+                    <!-- Add more options as needed -->
+                </datalist>
+                <br>
+                <input type="submit" class="btn btn-outline-dark" style="margin-bottom: 20px;font-family: Georgia, serif;">
+            </form>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-5 g-4">
+            {% if data %}
+                {% for i in data %}
+                    {% if i[0] and i[1] and i[2] %}
+                        <div class="col">
+                            <div class="card" style="margin-left:50px ;border-radius: 15px; background-color:black; width: 250px; display: flex; flex-direction: column; margin-bottom: 20px;">
+                                <img class="card-img-top mx-auto" style="margin-top: 10px; width: 200px;" src="{{ i[2] }}">
+                                <p style="margin: 10px 10px 0 ; background-color: transparent;color: lightgoldenrodyellow; font-family: Georgia, serif;">{{ i[0] }}</p>
+                                <p style="margin: 0 10px;background-color: transparent;color: lightgoldenrodyellow; font-family: Georgia, serif;">{{ i[1] }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %} 
+            {% endif %}
+        </div> 
+        <div class="brand" style="display: flex; justify-content: center; align-items: center;">
+            <h1 style="font-family: 'Shrikhand', sans-serif; padding-top: 100px; color: white;font-size: 40px;">fantasia</h1>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

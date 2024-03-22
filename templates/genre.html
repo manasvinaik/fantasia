@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <style>
+        @font-face {
+            font-family: 'Shrikhand';
+            src: url('{{ url_for("static", filename="Shrikhand.ttf") }}') format('truetype');
+        }
+
+        body {
+            background-image: url('{{ url_for("static", filename="genre.jpg") }}');
+            background-size: cover;
+            height: 100%;
+            width: 100%;
+        }
+
+        .slider{
+            background-color: transparent;
+            height: 300px;
+            margin: 0 auto 0 auto;
+            position: relative;
+            width: 60%;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+        }
+
+        .slide-track{
+            display: flex;
+            width: calc(300px * 30);
+            animation: scroll 50s linear infinite;
+        }
+
+        .slide-track-opp{
+            display: flex;
+            width: calc(300px * 30);
+            animation: scroll 50s linear infinite reverse;
+        }
+
+        .slide-track:hover{
+            animation-play-state: paused;
+        }
+
+        .slide-track-opp:hover{
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            0%{
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-200px*5));
+            }
+        }
+
+
+        .slide{
+            height: 300px;
+            width: 200px;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            perspective: 100px;
+        }
+
+
+        img{
+            width: 100%;
+            transition: transform 1s;
+        }
+
+        img:hover{
+            transform: translateZ(20px);
+        }
+
+        /* Gradient shadows */
+
+        .slider::before, .slider::after{
+            background: linear-gradient(to right,rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+            content: '';
+            height: 100%;
+            position: relative;
+            width: 10%;
+            z-index: 2;
+            
+        }
+
+        .slider::before{
+            left: 0;
+            top: 0;
+        }
+
+        .slide::after{
+            left: 0;
+            right: 0;
+            top: 0;
+            transform: rotateZ(180deg);
+        }
+
+        .navbar {
+            background-color: black;
+            border-radius: 50px;
+            margin: 10px 10px 0 10px;
+        }
+
+        .navbar-toggler {
+            border: none;
+            font-size: 1.25rem;
+        }
+
+        .navbar-toggler:focus,
+        .btn-close:focus {
+            box-shadow: none;
+            outline: none;
+        }
+
+        .navbar-nav .nav-link {
+            color: white;
+            font-family: Georgia, serif;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link:hover {
+            opacity: 0.7;
+        }
+
+        .nav-item .nav-link.active {
+            color: #fbc547;
+            font-family: Georgia, serif;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <span class="navbar-toggler-icon" style="color: white;"></span>
+            </button>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" style="background-color: black;">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel" style="color: white; font-family: Georgia, serif;">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link" mx-lg-2 aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="/top">Top 15</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/recommend">Recommend books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/genre">Genre Recommendation</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="popular" style="display: flex; justify-content: center; align-items: center; margin: 150px 0 0 0;">
+        <p style="color: #fbc547; font-family: Georgia, serif; font-weight: bold; font-size: 50px;margin: 20px 50px 0 0;">Fiction</p>
+    </div>
+    <div class="fiction">
+        <div class="slider"> 
+            <div class="slide-track">
+                {% for i in fictionimages %}
+                <div class="slide">
+                    <img src="{{ i }}" alt="Image">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="popular" style="display: flex; justify-content: center; align-items: center; margin: 150px 0 0 0;">
+        <p style="color: #fbc547; font-family: Georgia, serif; font-weight: bold; font-size: 50px;margin: 20px 50px 0 0;">Science-Fiction</p>
+    </div>
+    <div class="scifi">
+        <div class="slider"> 
+            <div class="slide-track-opp">
+                {% for i in scifiimages %}
+                <div class="slide">
+                    <img src="{{ i }}" alt="Image">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="popular" style="display: flex; justify-content: center; align-items: center; margin: 150px 0 0 0;">
+        <p style="color: #fbc547; font-family: Georgia, serif; font-weight: bold; font-size: 50px;margin: 20px 50px 0 0;">Mystery</p>
+    </div>
+    <div class="mystery">
+        <div class="slider"> 
+            <div class="slide-track">
+                {% for i in mysteryimages %}
+                <div class="slide">
+                    <img src="{{ i }}" alt="Image">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="popular" style="display: flex; justify-content: center; align-items: center; margin: 150px 0 0 0;">
+        <p style="color: #fbc547; font-family: Georgia, serif; font-weight: bold; font-size: 50px;margin: 20px 50px 0 0;">Horror</p>
+    </div>
+    <div class="horror">
+        <div class="slider"> 
+            <div class="slide-track-opp">
+                {% for i in horrorimages %}
+                <div class="slide">
+                    <img src="{{ i }}" alt="Image">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="popular" style="display: flex; justify-content: center; align-items: center; margin: 150px 0 0 0;">
+        <p style="color: #fbc547; font-family: Georgia, serif; font-weight: bold; font-size: 50px;margin: 20px 50px 0 0;">Romance</p>
+    </div>
+    <div class="romance">
+        <div class="slider"> 
+            <div class="slide-track">
+                {% for i in rimages %}
+                <div class="slide">
+                    <img src="{{ i }}" alt="Image">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="popular" style="display: flex; justify-content: center; align-items: center; margin: 150px 0 0 0;">
+        <p style="color: #fbc547; font-family: Georgia, serif; font-weight: bold; font-size: 50px;margin: 20px 50px 0 0;">Graphic Novels</p>
+    </div>
+    <div class="graphics">
+        <div class="slider"> 
+            <div class="slide-track-opp">
+                {% for i in graphicimages %}
+                <div class="slide">
+                    <img src="{{ i }}" alt="Image">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="popular" style="display: flex; justify-content: center; align-items: center; margin: 150px 0 0 0;">
+        <p style="color: #fbc547; font-family: Georgia, serif; font-weight: bold; font-size: 50px;margin: 20px 50px 0 0;">Non-Fiction</p>
+    </div>
+    <div class="nonfiction">
+        <div class="slider"> 
+            <div class="slide-track">
+                {% for i in nonimages %}
+                <div class="slide">
+                    <img src="{{ i }}" alt="Image">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="brand" style="display: flex; justify-content: center; align-items: center;">
+        <h1 style="font-family: 'Shrikhand', sans-serif; padding-top: 200px; color: white;">fantasia</h1>
+    </div>
+</body>
+</html>

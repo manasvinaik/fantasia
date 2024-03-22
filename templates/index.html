@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <style>
+        @font-face {
+            font-family: 'Shrikhand';
+            src: url('{{ url_for("static", filename="Shrikhand.ttf") }}') format('truetype');
+        }
+
+        body{
+            background-color: black
+        }
+    
+        .back {
+            background-image: url('{{ url_for("static", filename="fantasia.png") }}');
+            background-size: cover;
+            height: 100vh;
+            width: 100%;
+        }
+
+
+        .slider{
+            background-color: black;
+            height: 300px;
+            margin: 0 auto 150px auto;
+            position: relative;
+            width: 60%;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+        }
+
+        .slide-track{
+            display: flex;
+            width: calc(200px * 20);
+            animation: scroll 20s linear infinite;
+        }
+        .slide-track:hover{
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            0%{
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-200px*5));
+            }
+        }
+
+        .slide{
+            height: 300px;
+            width: 200px;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            
+            perspective: 100px;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        img{
+            width: 100%;
+        }
+
+        
+
+        /* Gradient shadows */
+
+        .slider::before, .slider::after{
+            background: linear-gradient(to right,rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+            content: '';
+            height: 100%;
+            position: relative;
+            width: 10%;
+            z-index: 2;
+            
+        }
+
+        .slider::before{
+            left: 0;
+            top: 0;
+        }
+
+        .slide::after{
+            left: 0;
+            right: 0;
+            top: 0;
+            transform: rotateZ(180deg);
+        }
+
+        .navbar {
+            background-color: black;
+            border-radius: 50px;
+            margin: 10px 10px 0 10px;
+        }
+
+        .navbar-toggler {
+            border: none;
+            font-size: 1.25rem;
+        }
+
+        .navbar-toggler:focus,
+        .btn-close:focus {
+            box-shadow: none;
+            outline: none;
+        }
+
+        .navbar-nav .nav-link {
+            color: white;
+            font-family: Georgia, serif;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link:hover {
+            opacity: 0.7;
+        }
+
+        .nav-item .nav-link.active {
+            color: #fbc547;
+            font-family: Georgia, serif;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <span class="navbar-toggler-icon" ></span>
+            </button>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" style="background-color: black;">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel" style="color: white; font-family: Georgia, serif;">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" mx-lg-2 aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/top">Top 15</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/recommend">Recommend books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/genre">Genre Recommendation</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div class='back' style="text-align: center;">
+        <h1 style="font-family: Shrikhand,serif; font-size: 14vw;color: white;padding-top: 400px;">fantasia</h1>
+    </div>
+
+    <div class="popular" style="background-color: black; display: flex; justify-content: center; align-items: center; margin: 150px 0 0 0;">
+        <p style="color: #fbc547; font-family: Georgia, serif; font-weight: bold; font-size: 50px;margin: 40px 50px 0 0;">Popular books</p>
+    </div>
+    <div class="slider">
+        
+        <div class="slide-track">
+            
+            {% for i in range(15) %}
+            <div class="slide">
+                <img src="{{ image[i] }}" alt="Image">
+                <div class="overlay"></div>
+            </div>
+            {% endfor %}
+
+
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all the overlays
+            var overlays = document.querySelectorAll('.overlay');
+            
+            // Add click event listener to each overlay
+            overlays.forEach(function(overlay) {
+                overlay.addEventListener('click', function() {
+                    window.location.href = '/top'; // Redirect to the "Top Ten" page
+                });
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <style>
+        body{
+            background-image: url('{{ url_for("static", filename="fantasiatop.png") }}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            max-height: 100%;
+            max-width: 80%;
+            justify-content: center;
+            align-items: center;
+        }
+    
+        @font-face {
+            font-family: 'Shrikhand';
+            src: url('{{ url_for("static", filename="Shrikhand.ttf") }}') format('truetype');
+        }
+
+        .card {
+            border-radius: 15px;
+            background-color: black;
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 10px; /* Adjust this value to leave some space below the rating */
+        }
+
+        .card .card-img-top{
+            align-items: center;
+        }
+
+
+        .navbar {
+            background-color: black;
+            border-radius: 50px;
+            margin: 10px 10px 0 10px;
+        }
+
+        .navbar-toggler {
+            border: none;
+            font-size: 1.25rem;
+        }
+
+        .navbar-toggler:focus,
+        .btn-close:focus {
+            box-shadow: none;
+            outline: none;
+        }
+
+        .navbar-nav .nav-link {
+            color: white;
+            font-family: Georgia, serif;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link:hover {
+            opacity: 0.7;
+        }
+
+        .navbar-nav .nav-link.active {
+            color: #fbc547;
+            font-family: Georgia, serif;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <span class="navbar-toggler-icon" style="color: white;"></span>
+            </button>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" style="background-color: black;">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel" style="color: white; font-family: Georgia, serif;">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/top">Top 15</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/recommend">Recommend books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/genre">Genre Recommendation</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="topback"
+    ></div> 
+
+    <div class="display">
+        <div class="row">
+
+            <h1 style="background-color:black; color: #fbc547; font-size: 5vw; font-family: Shrikhand, serif; margin: 130px 0 40px 100px; width: 40vw; border-radius: 20px;">Top 15 Books</h1>
+            
+        </div>
+    
+        <div class="row row-cols-1 row-cols-md-5 g-4">
+            {% for i in range(book_name|length) %}
+                <div class="col">
+                    <div class="card" style="margin-left:200px ;border-radius: 15px; background-color:black; width: 250px; display: flex; flex-direction: column; margin-bottom: 20px;">
+                        <img class="card-img-top mx-auto" style="margin-top: 10px; width: 200px;" src="{{ image[i] }}">
+                        <p style="margin: 10px 10px 0 ; background-color: transparent;color: lightgoldenrodyellow; font-family: Georgia, serif;">{{ book_name[i] }}</p>
+                        <p style="margin: 0 10px;background-color: transparent;color: lightgoldenrodyellow; font-family: Georgia, serif;">{{ author[i] }}</p>
+                        <p style="margin: 0 10px;background-color: transparent;color: #fbc547; font-family: Georgia, serif;font-weight: bold;">Rating: {{ '%.2f' % rating[i] }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
